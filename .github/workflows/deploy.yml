@@ -28,10 +28,13 @@ jobs:
           echo "IMAGE_NAME=$IMAGE_NAME:$TAG" >> $GITHUB_ENV
 
       - name: Deploy to CapRover
-        uses: caprover/deploy-to-caprover-action@v1.2
-        with:
-          server: ${{ secrets.CAPROVER_SERVER }}
-          app: caprover-sample-react
-          token: ${{ secrets.CAPROVER_TOKEN }}
-          image: ${{ env.IMAGE_NAME }}
+        run: |
+          IMAGE=${{ env.IMAGE_NAME }}
+          curl -X POST "https://${{ secrets.CAPROVER_SERVER }}/api/v2/apps/appData" \
+            -H "Content-Type: application/json" \
+            -H "X-Api-Token: ${{ secrets.CAPROVER_TOKEN }}" \
+            -d '{
+              "appName": "caprover-sample-react",
+              "newImageName": "'"$IMAGE"'"
+            }'
 
