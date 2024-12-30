@@ -1,10 +1,10 @@
 name: Deploy to CapRover
 
-
 on:
   push:
     branches:
       - master
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -21,7 +21,7 @@ jobs:
 
       - name: Build and push Docker image
         run: |
-          IMAGE_NAME=${{ secret.DOCKER_USERNAME }}/caprover-sample-react
+          IMAGE_NAME=${{ secrets.DOCKER_USERNAME }}/caprover-sample-react
           TAG=$(git rev-parse --short HEAD)
           docker build -t $IMAGE_NAME:$TAG .
           docker push $IMAGE_NAME:$TAG
