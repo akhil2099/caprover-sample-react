@@ -27,15 +27,13 @@ jobs:
           docker push $IMAGE_NAME:$TAG
           echo "IMAGE_NAME=$IMAGE_NAME:$TAG" >> $GITHUB_ENV
 
-      - name: Deploy to CapRover
-        run: |
-          IMAGE=${{ env.IMAGE_NAME }}
-          echo "Deploying image: $IMAGE"
-          curl -X POST "${{ secrets.CAPROVER_SERVER }}/api/v2/apps/appData" \
-            -H "Content-Type: application/json" \
-            -H "X-Api-Token: ${{ secrets.CAPROVER_TOKEN }}" \
-            -d '{
-              "appName": "caprover-sample-react",
-              "newImageName": "'"$IMAGE"'"
-            }'
 
+      - name: Deploy Image to CapRover
+        uses: caprover/deploy-from-github@v1.1.2
+        env:
+          NODE_TLS_REJECT_UNAUTHORIZED: 0  # Only use temporarily for testing
+        with:
+          server: '${{ secrets.CAPROVER_SERVER }}'
+          app: 'caprover-sample-react'
+          token: '${{ secrets.CAPROVER_TOKEN }}'
+          image: ghcr.io/${{ github.repository_owner }}/react-node-app:${{ github.sha }}
