@@ -30,7 +30,8 @@ jobs:
       - name: Deploy to CapRover
         run: |
           IMAGE=${{ env.IMAGE_NAME }}
-          curl -X POST "https://${{ secrets.CAPROVER_SERVER }}/api/v2/apps/appData" \
+          echo "Deploying image: $IMAGE"
+          curl -X POST "${{ secrets.CAPROVER_SERVER }}/api/v2/apps/appData" \
             -H "Content-Type: application/json" \
             -H "X-Api-Token: ${{ secrets.CAPROVER_TOKEN }}" \
             -d '{
