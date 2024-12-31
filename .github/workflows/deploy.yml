@@ -22,11 +22,10 @@ jobs:
       - name: Build and push Docker image
         run: |
           IMAGE_NAME=${{ secrets.DOCKER_USERNAME }}/caprover-sample-react
-          TAG=$(git rev-parse --short HEAD)
+          TAG=latest  # Always tag as latest
           docker build -t $IMAGE_NAME:$TAG .
           docker push $IMAGE_NAME:$TAG
           echo "IMAGE_NAME=$IMAGE_NAME:$TAG" >> $GITHUB_ENV
-
 
       - name: Deploy Image to CapRover
         uses: caprover/deploy-from-github@v1.1.2
@@ -36,4 +35,5 @@ jobs:
           server: '${{ secrets.CAPROVER_SERVER }}'
           app: 'caprover-sample-react'
           token: '${{ secrets.CAPROVER_TOKEN }}'
-          image: ghcr.io/${{ github.repository_owner }}/react-node-app:${{ github.sha }}
+          image: ${{ secrets.DOCKER_USERNAME }}/caprover-sample-react:latest  # Use the 'latest' tag
+
